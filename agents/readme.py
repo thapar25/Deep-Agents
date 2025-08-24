@@ -2,9 +2,11 @@ from langchain_openai import ChatOpenAI
 from langchain_core.tools import tool
 from langchain_experimental.utilities import PythonREPL
 from deepagents import create_deep_agent
+from langchain_ollama import ChatOllama
 
 
-llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.2)
+# llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.2)
+llm = ChatOllama(model="gpt-oss")
 
 
 @tool
