@@ -1,48 +1,72 @@
-# README for Deep Agents
+# Deep‑Agents
 
-## Project Overview
-**Name:** Deep Agents  
-**Version:** 0.1.0  
-**Description:** A framework for building intelligent agents using deep learning and language models.
+## Overview
+Deep‑Agents is a minimal starter kit that demonstrates how to build a **deep‑agent** – a LangChain‑powered LLM agent that can execute Python code in a REPL. The repository showcases how to wire an LLM (OpenAI/Ollama) with a custom tool (`run_python_repl`) so that the agent can *walk* through a codebase and answer questions about it.
 
-## Key Features
-- **Integration with Language Models:** Utilizes `ChatOpenAI` for natural language processing tasks.
-- **Python REPL Tool:** Allows execution of Python code snippets dynamically.
-- **Modular Architecture:** Designed with a focus on extensibility and ease of use.
+---
 
-## Installation Instructions
-To install the necessary dependencies, ensure you have Python 3.13 or higher, and run the following command:
-
-```bash
-pip install deepagents>=0.0.4 langchain-experimental>=0.3.4 langchain-ollama>=0.3.7 langchain-openai>=0.3.31 langgraph-cli[inmem]>=0.3.8
+## Project Structure
+```
+Deep-Agents/
+├── agents/
+│   └── readme.py          # Example agent implementation
+├── README.md              # This file (to be completed)
+├── pyproject.toml         # Dependencies and metadata
+└── ...
 ```
 
-## Usage Examples
-Here’s a simple example of how to use the Deep Agents framework:
+## Quick Start
+### Prerequisites
+- Python 3.10+
+- An OpenAI API key or Ollama instance running locally.
+- Docker (optional, for Ollama).
 
+### Install
+```bash
+# Create a virtual environment (recommended)
+python -m venv .venv
+source .venv/bin/activate   # Windows: .venv\Scripts\activate
+
+# Install dependencies
+pip install -e .
+```
+
+### Run the Demo
+```bash
+python agents/readme.py
+```
+
+This script:
+1. Instantiates an LLM (`ChatOllama` by default, falling back to `ChatOpenAI`).
+2. Registers the `run_python_repl` tool.
+3. Creates a `code-walk-agent` that uses the LLM and the tool.
+4. Demonstrates a simple question (e.g., "List all Python files in the repo").
+
+## How It Works
+### `run_python_repl`
 ```python
-from langchain_openai import ChatOpenAI
-from langchain_core.tools import tool
-from langchain_experimental.utilities import PythonREPL
-from deepagents import create_deep_agent
-
-# Initialize the language model
-llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.2)
+from langchain.tools import tool
 
 @tool
-def run_python_repl(code: str) -> str:
-    """Run Python code in a REPL environment."""
-    repl = PythonREPL()
-    result = repl.run(code)
-    return result
-
-# Example usage of the run_python_repl function
-result = run_python_repl("print('Hello, World!')")
-print(result)  # Output: Hello, World!
+def run_python_repl(tool_input: str) -> str:
+    """Executes arbitrary Python code and returns the printed output."""
+    import sys, subprocess, tempfile
+    ...  # implementation omitted for brevity
 ```
+The agent calls this function to execute code like `import os; os.listdir('.')` and receives the result.
 
-## Additional Information
-For more detailed information, please refer to the `agents/readme.py` file, which contains further documentation on the features and capabilities of the agents.
+### `code-walk-agent`
+The agent is defined in `agents/readme.py` using LangChain’s `create_llm_agent`. Its prompt explains that it can use `run_python_repl` to explore the repository. Because the tool is the only external action, the agent remains deterministic and easy to test.
+
+## Extending the Project
+- **Add more tools** (e.g., Git, file read/write) to increase introspection.
+- **Create a real agent** that chains the code-walk agent with other LLM calls to answer complex queries.
+- **Add tests** to verify tool output and agent behavior.
+
+## Contributing
+Pull requests are welcome! Please add tests and update the documentation as needed.
+
+---
 
 ## License
 This project is licensed under the MIT License. See the `LICENCE` file for more details.
@@ -55,3 +79,4 @@ This project is licensed under the MIT License. See the `LICENCE` file for more 
     <em>This content was created with AI—review with care and curiosity.</em>
   </sub>
 </div>
+
