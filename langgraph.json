@@ -1,0 +1,7 @@
+{
+  "dependencies": ["."],
+  "graphs": {
+    "readme": "agents/readme.py:agent"
+  },
+  "env": ".env"
+}

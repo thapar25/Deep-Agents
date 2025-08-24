@@ -1,0 +1,13 @@
+[project]
+name = "deep-agents"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "deepagents>=0.0.4",
+    "langchain-experimental>=0.3.4",
+    "langchain-ollama>=0.3.7",
+    "langchain-openai>=0.3.31",
+    "langgraph-cli[inmem]>=0.3.8",
+]
