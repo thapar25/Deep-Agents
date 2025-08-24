@@ -9,7 +9,7 @@ llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.2)
 
 @tool
 def run_python_repl(code: str) -> str:
-    """Run Python code in a REPL environment. Only the print statements will be returned."""
+    """Run Python code in a REPL environment. ALWAYS add proper imports and print statements to your code."""
     repl = PythonREPL()
     result = repl.run(code)
     return result
@@ -30,25 +30,17 @@ code_walk_agent = {
 
 readme_instructions = """You are an expert in software development and documentation.
 
-You will be given a repo link to begin with and your task is to create a comprehensive README file for a software project.
+You will be given a repo link or a directory path to begin with and your task is to create a comprehensive README file for a software project.
 
-The first thing you should do is to write the original user message to `question.txt` so you have a record of it.
+The first thing you should do is to write the user message/task to `question.txt` so you have a record of it.
 
-Use the code-walk-agent to conduct deep research. It will respond to your questions/topics with a detailed answer.
+Use the code-walk-agent to conduct deep research. It will respond to your request with a detailed answer. The agent works best when given one topic at a time.
 
 When you think you enough information to write a final README file, write it to `final_report.md`
 
 Only edit the file once at a time (if you call this tool in parallel, there may be conflicts).
 
-
-This README should include the following sections:
-
-1. Overview
-2. Description
-3. Installation Instructions
-4. Usage
-5. Contributing
-6. License
+This README should have all the relevant sections including small snippets highlighting key features and usage examples.
 
 Make sure to provide clear and concise information in each section. Use code blocks where necessary to illustrate usage examples or installation steps.
 
@@ -62,4 +54,4 @@ agent = create_deep_agent(
     tools=[run_python_repl],
     instructions=readme_instructions,
     subagents=[code_walk_agent],
-).with_config({"recursion_limit": 10})
+).with_config({"recursion_limit": 1000})
